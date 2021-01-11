@@ -1,0 +1,62 @@
+{{ attach_library('courts_intranet_theme/navigation') }}
+
+{% import _self as menus %}
+
+{{ menus.menu_links(items, attributes, 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+    {% if menu_level == 0 %}
+      <ul class="navigation__menu navigation--level-{{ menu_level + 1 }}">
+    {% else %}
+      <ul class="navigation__sub-menu navigation--level-{{ menu_level + 1 }}">
+    {% endif %}
+    {% for item in items %}
+      {# Set classes array for list items. #}
+      {% set item_classes = [
+          'navigation__item',
+          'navigation__item--level-' ~ (menu_level + 1),
+          item.in_active_trail ? 'navigation__item--active-trail',
+          item.below ? 'navigation__item--has-children',
+          loop.last ? ' navigation__item--last',
+        ]
+      %}
+      {# Set classes array for links. #}
+      {% set link_classes = [
+          'navigation__link',
+          'navigation__link--level-' ~ (menu_level + 1),
+          item.in_active_trail ? 'navigation__link--active-trail',
+        ]
+      %}
+      {# If rendering in Drupal, pass the classes array through
+      Drupal's attributes. #}
+      {% if attributes %}
+        <li{{ item.attributes.addClass(item_classes) }}>
+      {% else %}
+        {# If in Pattern Lab, add classes manually. #}
+        <li class="navigation__item navigation__item--level-{{- menu_level + 1 -}}
+          {{- item.in_active_trrail ? ' navigation__item--active-trail' -}}
+          {{- item.below ? ' navigation__item--has-children' -}}
+          {{- loop.last ? ' navigation__item--last' -}}">
+      {% endif %}
+      {# If in Drupal, use the link() function and pass the link_classes
+      array through Drupal's attributes. #}
+      {% if attributes %}
+        {{ link(item.title, item.url, {'class': link_classes}) }}
+      {% else %}
+        {# If in Pattern Lab, use a regular anchor tag with manual classes. #}
+        <a class="navigation__link navigation__link--level-{{- menu_level + 1 -}}
+          {{- item.in_active_trail ? ' navigation__link--active-trail' -}}"
+          href="{{ item.url }}">{{ item.title }}</a>
+      {% endif %}
+      {# If list items havr submenus, run the menu_links macro again
+      to the repeat the process all over. #}
+      {% if item.below %}
+        {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+      {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

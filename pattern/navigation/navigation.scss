@@ -1,0 +1,154 @@
+.navigation__menu {
+  background-color: #fff;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 20;
+
+  // Align top level list items in a row using flexbox.
+  &.navigation--level-1 {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+  }
+}
+
+// ALL list items and links.
+// NOTE:  Not doing hover styles because hover is being
+// done in list items (li), not links.  This would cause dropdown links
+// to react when hovering over top level parent list item.
+.navigation__item {
+  background-color: #fff;
+  list-style-type: none;
+
+  .navigation__link{
+    color: #444;
+    text-decoration: none;
+
+    // When a link (<a>) has 'is-active' class
+    // turn text color red.
+    &.is-active {
+      color: rebeccapurple;
+    }
+  }
+}
+
+// Top level list items and links.
+.navigation__item--level-1 {
+  border: 1px solid #fff;
+
+  // Adding border and position to only list items with dropdowns.
+  &.navigation__item--has-children {
+    position: relative;
+    z-index: 10;
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+      border: 1px solid lighten(#ccc, 10%);
+    }
+  }
+
+  // Using hover on list item (li), since dropdowns
+  // are children of list items, not links.  Doing this ensures
+  // top level links continue using hover styles even when hovering
+  // over dropdown links.
+  &:hover,
+  &:focus,
+  &:focus-within {
+
+    // Hovering over level-1 list item
+    // changes color of top level links.
+    > a {
+      color: rebeccapurple;
+    }
+
+    // Hovering over level-1 list item
+    // Shows dropdown.
+    .navigation--level-2 {
+      display: block;
+    }
+  }
+
+  // Open last dropdown to the left to ensure
+  // dropdown is not cutoff by the chrome.
+  &.navigation__last-item {
+
+    .navigation--level-2  {
+      left: inherit;
+      right: -1px;
+    }
+  }
+}
+
+// Top level links.
+.navigation__link--level-1 {
+  align-items: center;
+  display: flex;
+  font-size: 1.8rem;
+  font-weight: bold;
+  padding: 16px 30px;
+
+  // Adds white bottom border and position/z-index to top links that have dropdowns.
+  // This removes gray border giving the illusion that dropdown
+  // is a box that includes top level link in addition to dropdown links.
+  &.navigation__link--has-children {
+    border-bottom: 1px solid #fff;
+    position: relative;
+    z-index: 10;
+  }
+}
+
+// Second level menu (dropdown).  Hidden by default
+// and shown on hover over top level list item.
+.navigation--level-2 {
+  border: 1px solid lighten(#ccc, 10%);
+  display: none;
+  left: -1px;
+  position: absolute;
+  // top: 59px moves dropdown up by 1px to ensure top border
+  // on dropdown dissapears by placing dropdown behind top level link.
+  // Since top level links has a white bottom border, this gives illussion
+  // that dropdown wraps top level link and dropdown links.
+  top: 59px;
+  width: 250px;
+  z-index: -1;
+}
+
+// Second level links.
+.navigation__link--level-2,
+.navigation__link--level-3 {
+  color: #444;
+  display: block;
+  padding: 12px 10px 12px 15px;
+
+  &:hover,
+  &:focus {
+    background-color: #ededed;
+    color: rebeccapurple;
+  }
+}
+
+.navigation__item--level-2 {
+
+  &.navigation__item--has-children {
+    position: relative;
+  }
+}
+
+.navigation--level-3 {
+  border: 1px solid lighten(#ccc, 10%);
+  display: none;
+  left: 248px;
+  position: absolute;
+  top: 0;
+  width: 250px;
+
+  .navigation__item--level-2.navigation__item--has-children:hover &,
+  .navigation__item--level-2.navigation__item--has-children:focus & {
+    background-color: #ededed;
+    color: rebeccapurple;
+    display: block;
+  }
+}
